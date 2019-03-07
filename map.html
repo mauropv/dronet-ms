@@ -73,7 +73,7 @@ var markers = L.layerGroup().addTo(map);
 
     for (var i = 0; i < 1; i++) {
 
-
+        console.log(coordx);
         marker = new L.marker([51.5+(coordx/10000), -0.2+(coordy/10000)]).bindPopup("I am a LALA leaf.");
 
         marker.addTo(markers);
@@ -115,9 +115,10 @@ client.get('http://localhost:80/dronet-ms-core/v1/mapStatus', function(response)
     drones = json["drones"];
     var arrayLength = drones.length;
     deleteMarkers();
+    console.log(response);
     for (var i = 0; i < arrayLength; i++) {
         console.log(drones[i]);
-        addMarker(drones[i].yCoord,drones[i].xCoord);
+        addMarker(drones[i].y_coord,drones[i].x_coord);
     }
 
 });

@@ -5,6 +5,7 @@ import com.codahale.metrics.Timer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import sapienza.di.reti.beans.Drone;
+import sapienza.di.reti.beans.UpdateRequest;
 import sapienza.di.reti.services.GameMap;
 
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 
 /***
@@ -110,7 +112,7 @@ public class DroneController {
             mapStat.put("mapDetails",details);
 
             //Drones
-            mapStat.put("drones",gameMap.getDrones());
+            mapStat.put("drones",gameMap.getDrones().values());
 
             //Shots
             mapStat.put("shots",gameMap.getShots());
@@ -127,8 +129,8 @@ public class DroneController {
  //   PUT /CreateDrone (String Name)
  //   return a idUnivoco and a secretKey
 
-    @RequestMapping(value =  "/" + BASE_VERSION + "/createDrone", method = POST, consumes = "text/plain")
-    public HashMap<String, String> auth(@RequestHeader(value="user-agent") String userAgent, @RequestBody String droneName) throws Exception {
+    @RequestMapping(value =  "/" + BASE_VERSION + "/createDrone", method = PUT, consumes = "text/plain")
+    public HashMap<String, String> createDrone(@RequestHeader(value="user-agent") String userAgent, @RequestBody String droneName) throws Exception {
         Timer.Context timer = createDroneTimer.time();
         HashMap<String, String> response = new HashMap<String, String>();
         try {
@@ -147,6 +149,31 @@ public class DroneController {
             response.put("uniqueId",newDrone.getUniqueId());
             response.put("secret",secret);
 
+        }
+        finally {
+            timer.stop();
+        }
+        return response;
+    }
+
+ //   POST /updateDroneStatus (idUnivoco, SecretKey, direzione, velocita)
+ //   return a drone
+
+    @RequestMapping(value =  "/" + BASE_VERSION + "/updateDroneStatus", method = POST, consumes = "application/json")
+    public Drone updateDroneStatus(@RequestHeader(value="user-agent") String userAgent, @RequestBody UpdateRequest updateRequest) throws Exception {
+        Timer.Context timer = createDroneTimer.time();
+        Drone response = null;
+        try {
+            if (!userAgent.equals("drone-client"))
+                throw new Exception("Solo i droni giusti possono accedere alla chat :(");
+
+            System.out.println("UpldateRequest: " +updateRequest.getIdunivoco() + updateRequest.getSecretkey());
+            //Check drone existance
+            if (!gameMap.getDroneSecret(updateRequest.getIdunivoco()).equals(updateRequest.getSecretkey()))
+                throw new Exception("Questo nome del drone non e' consentito");
+
+            gameMap.getDrone(updateRequest.getIdunivoco()).setDirection(updateRequest.getDirezione());
+            response = gameMap.getDrone(updateRequest.getIdunivoco());
         }
         finally {
             timer.stop();

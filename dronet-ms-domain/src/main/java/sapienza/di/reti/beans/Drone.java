@@ -1,6 +1,7 @@
 package sapienza.di.reti.beans;
 
 
+import java.util.Arrays;
 import java.util.Random;
 import java.util.UUID;
 
@@ -33,6 +34,8 @@ public class Drone {
     private Integer xCoord;
     private Integer yCoord;
     private Integer speed = 1;
+
+
     private String direction = "NE";
     private Long lastUpdateTimestamp;
     private String status = "Alive";
@@ -99,4 +102,12 @@ public class Drone {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public void setDirection(String direction) throws Exception {
+        if(!Arrays.asList(allowedDirections).contains(direction)){
+            throw  new Exception("Direction not allowed");
+        }
+        this.direction = direction;
+    }
+
 }

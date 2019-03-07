@@ -23,7 +23,7 @@ public class GameMap {
     private Integer baseStationX = 180;
     private Integer baseStationY = 90;
 
-    private ArrayList<Drone> drones = new ArrayList<>();
+    private HashMap<String,Drone> drones = new HashMap<>();
     private ArrayList<Shot> shots = new ArrayList<>();
     private ArrayList<POI> POIList = new ArrayList<>();
 
@@ -48,7 +48,7 @@ public class GameMap {
         return baseStationY;
     }
 
-    public ArrayList<Drone> getDrones() {
+    public HashMap<String, Drone> getDrones() {
         return drones;
     }
 
@@ -64,9 +64,6 @@ public class GameMap {
         return dronesSecrets.get(unique);
     }
 
-    public void setDronesSecrets(String unique, String secret) {
-        dronesSecrets.put(unique,secret);
-    }
 
     @PostConstruct
     public void buildPOI() {
@@ -75,8 +72,9 @@ public class GameMap {
     }
 
     public void addDrone(Drone newDrone, String secret) {
-        drones.add(newDrone);
+        drones.put(newDrone.getUniqueId(),newDrone);
         dronesSecrets.put(newDrone.getUniqueId(),secret);
+        System.out.println("NewDrone: "+newDrone.getUniqueId()+" "+secret);
     }
 
     @Scheduled(fixedRate = 500)
@@ -94,38 +92,39 @@ public class GameMap {
     private void updateDronesPositions(){
 
 
-        for (Drone drone:drones) {
+        for (String droneUnique:drones.keySet()) {
+            Drone drone = drones.get(droneUnique);
             if(drone.getStatus().equals("Alive")) {
                 int vert = 0;
                 int orizz = 0;
                 int speed = drone.getSpeed();
                 switch (drone.getDirection()) {
                     case "N":
-                        vert -= speed;
+                        vert = -speed;
                         break;
                     case "NE":
-                        vert -= speed;
+                        vert = -speed;
                         orizz = +speed;
                         break;
                     case "E":
                         orizz = +speed;
                         break;
                     case "SE":
-                        vert += speed;
-                        orizz = +speed;
+                        vert = speed;
+                        orizz = speed;
                         break;
                     case "S":
-                        vert += speed;
+                        vert = speed;
                         break;
                     case "SO":
-                        vert += speed;
+                        vert = speed;
                         orizz = -speed;
                         break;
                     case "O":
                         orizz = -speed;
                         break;
                     case "NO":
-                        vert -= speed;
+                        vert = -speed;
                         orizz = -speed;
                         break;
                 }
@@ -136,5 +135,9 @@ public class GameMap {
                 }
             }
         }
+    }
+
+    public Drone getDrone(String idUnivoco) {
+        return drones.get(idUnivoco);
     }
 }
