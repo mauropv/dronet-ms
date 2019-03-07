@@ -3,6 +3,7 @@ package sapienza.di.reti.services;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import sapienza.di.reti.beans.Drone;
+import sapienza.di.reti.beans.MovableObject;
 import sapienza.di.reti.beans.POI;
 import sapienza.di.reti.beans.Shot;
 
@@ -83,52 +84,39 @@ public class GameMap {
         if(epoch%4==0) {
             updateDronesPositions();
         }
-        //updateShots();
+        updateShots();
+        checkDiedDrones();
         //giveRewards();
 
         epoch+=1;
     }
 
-    private void updateDronesPositions(){
+    private void checkDiedDrones() {
+
+        for(Shot shot:shots){
+            for(Drone drone:drones.values()){
+                if(shot.getxCoord()==drone.getxCoord()&&shot.getyCoord()==drone.getyCoord()){
+                    drone.setStatus("Died");
+                }
+            }
+        }
+    }
+
+
+    private void updateShots(){
+        for(Shot shot : shots){
+            updateShotPosition(shot);
+        }
+    }
+
+    public void updateDronesPositions(){
 
 
         for (String droneUnique:drones.keySet()) {
             Drone drone = drones.get(droneUnique);
             if(drone.getStatus().equals("Alive")) {
-                int vert = 0;
-                int orizz = 0;
-                int speed = drone.getSpeed();
-                switch (drone.getDirection()) {
-                    case "N":
-                        vert = -speed;
-                        break;
-                    case "NE":
-                        vert = -speed;
-                        orizz = +speed;
-                        break;
-                    case "E":
-                        orizz = +speed;
-                        break;
-                    case "SE":
-                        vert = speed;
-                        orizz = speed;
-                        break;
-                    case "S":
-                        vert = speed;
-                        break;
-                    case "SO":
-                        vert = speed;
-                        orizz = -speed;
-                        break;
-                    case "O":
-                        orizz = -speed;
-                        break;
-                    case "NO":
-                        vert = -speed;
-                        orizz = -speed;
-                        break;
-                }
-                drone.updateCoords(orizz, vert);
+                Integer[] updater = getCoordsUpdaters(drone.getDirection(),drone.getSpeed());
+                drone.updateCoords(updater[0],updater[1]);
                 if (drone.getxCoord() < 0 || drone.getxCoord() >= sizeX || drone.getyCoord() < 0 || drone.getyCoord() >= sizeY) {
                     //DRONE FUORI DALLA MAPPA :(
                     drone.setStatus("Out");
@@ -137,7 +125,56 @@ public class GameMap {
         }
     }
 
+    public void updateShotPosition(Shot shot){
+        Integer[] updater = getCoordsUpdaters(shot.getDirection(),shot.getSpeed());
+        shot.updateCoords(updater[0],updater[1]);
+        if (shot.getxCoord() < 0 || shot.getxCoord() >= sizeX || shot.getyCoord() < 0 || shot.getyCoord() >= sizeY) {
+            //DRONE FUORI DALLA MAPPA :(
+            shots.remove(shot);
+        }
+    }
+
     public Drone getDrone(String idUnivoco) {
         return drones.get(idUnivoco);
+    }
+
+    public static Integer[] getCoordsUpdaters(String direction, Integer speed){
+        int vert = 0;
+        int orizz = 0;
+        switch (direction) {
+            case "N":
+                vert = speed;
+                break;
+            case "NE":
+                vert = speed;
+                orizz = +speed;
+                break;
+            case "E":
+                orizz = +speed;
+                break;
+            case "SE":
+                vert = -speed;
+                orizz = speed;
+                break;
+            case "S":
+                vert = -speed;
+                break;
+            case "SO":
+                vert = -speed;
+                orizz = -speed;
+                break;
+            case "O":
+                orizz = -speed;
+                break;
+            case "NO":
+                vert = speed;
+                orizz = -speed;
+                break;
+        }
+        return new Integer[]{orizz,vert};
+    }
+
+    public void addShot(Shot shot) {
+        shots.add(shot);
     }
 }

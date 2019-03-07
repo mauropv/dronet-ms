@@ -5,6 +5,8 @@ import com.codahale.metrics.Timer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import sapienza.di.reti.beans.Drone;
+import sapienza.di.reti.beans.Shot;
+import sapienza.di.reti.beans.ShotRequest;
 import sapienza.di.reti.beans.UpdateRequest;
 import sapienza.di.reti.services.GameMap;
 
@@ -180,5 +182,38 @@ public class DroneController {
         }
         return response;
     }
+
+    //POST /fire (idUnivoco, secretKey)
+
+    @RequestMapping(value =  "/" + BASE_VERSION + "/createShot", method = PUT, consumes = "application/json")
+    public Shot createShot(@RequestHeader(value="user-agent") String userAgent, @RequestBody ShotRequest shotRequest) throws Exception {
+        Timer.Context timer = createDroneTimer.time();
+        Shot response = null;
+        try {
+            if (!userAgent.equals("drone-client"))
+                throw new Exception("Solo i droni giusti possono accedere alla chat :(");
+            if (!gameMap.getDroneSecret(shotRequest.getIdunivoco()).equals(shotRequest.getSecretkey()))
+                throw new Exception("Questo nome del drone non e' consentito");
+
+            //Controlliamo che il drone sia vivo!
+            Drone shotingDrone = gameMap.getDrone(shotRequest.getIdunivoco());
+            if(!shotingDrone.getStatus().equals("Alive")){
+                throw new Exception("Questo drone non puo' sparare :(");
+            }
+            //Creiamo lo shot
+            Shot shot = new Shot(shotingDrone.getxCoord(),shotingDrone.getyCoord(),shotingDrone.getDirection(),shotingDrone.getUniqueId());
+            gameMap.updateShotPosition(shot);
+            gameMap.updateShotPosition(shot);
+
+            gameMap.addShot(shot);
+            response = shot;
+
+        }
+        finally {
+            timer.stop();
+        }
+        return response;
+    }
+
 
 }

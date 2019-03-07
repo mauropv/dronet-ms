@@ -8,21 +8,42 @@ import java.util.Arrays;
  */
 public class Shot {
 
-    private Integer x;
-    private Integer y;
+    private Integer xCoord;
+    private Integer yCoord;
+    private Integer speed = 1;
+    private String owner;
 
     private static String[] allowedDirections ={"N","NE","E","SE","S","SO","O","NO"};
     private String direction;
 
-    public Shot(Integer x, Integer y, String direction) throws Exception {
+    public Shot(Integer x, Integer y, String direction, String owner) throws Exception {
         if(!Arrays.asList(allowedDirections).contains(direction)){
             throw new Exception("Direction not allowed");
         }
 
         this.direction=direction;
-        this.x = x;
-        this.y = y;
-
+        this.xCoord = x;
+        this.yCoord = y;
+        this.owner = owner;
     }
 
+    public String getDirection() {
+        return direction;
+    }
+
+    public Integer getSpeed() {
+        return speed;
+    }
+    public void updateCoords(int orizz, int vert) {
+        xCoord+=orizz;
+        yCoord+=vert;
+    }
+
+    public Integer getxCoord() {
+        return xCoord;
+    }
+
+    public Integer getyCoord() {
+        return yCoord;
+    }
 }
