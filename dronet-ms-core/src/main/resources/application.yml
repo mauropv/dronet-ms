@@ -1,0 +1,47 @@
+#
+# Spring Boot exposes many common properties, more info at:
+# https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+#
+
+info:
+  app:
+    name: dronet-ms-core
+    version: 1.0.0-SNAPSHOT
+
+server:
+  port: 80
+  address: 127.0.0.1
+  compression:
+    enabled: true
+
+management:
+  port: 8098
+  address: 127.0.0.1
+  security:
+    enabled: false
+  shell:
+    ssh:
+      enabled: false
+
+endpoints:
+  jmx:
+    enabled: false
+
+logging:
+  level:
+    root: INFO
+    it.allindustries.ms: DEBUG
+
+jetty:
+  threadPool:
+    minThreads: 8
+    maxThreads: 16
+    idleTimeout: 60000
+    detailedDump: false
+  lowResources:
+    period: 1000
+    idleTimeout: 200
+    monitorThreads: true
+    maxConnections: 0
+    maxMemory: 0
+    maxLowResourcesTime: 5000

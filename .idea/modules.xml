@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/dronet-ms.iml" filepath="$PROJECT_DIR$/dronet-ms.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dronet-ms-core/dronet-ms-core.iml" filepath="$PROJECT_DIR$/dronet-ms-core/dronet-ms-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dronet-ms-domain/dronet-ms-domain.iml" filepath="$PROJECT_DIR$/dronet-ms-domain/dronet-ms-domain.iml" />
+    </modules>
+  </component>
+</project>

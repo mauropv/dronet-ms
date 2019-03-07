@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Custom Icons Tutorial - Leaflet</title>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==" crossorigin=""></script>
+
+
+    <style>
+		html, body {
+			height: 100%;
+			margin: 0;
+		}
+		#map {
+			width: 1200px;
+			height: 800px;
+		}
+	</style>
+
+
+</head>
+<body>
+
+<div id='map'></div>
+
+<script>
+	var map = L.map('map').setView([51.5, -0.09], 13);
+
+	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+	}).addTo(map);
+
+	var LeafIcon = L.Icon.extend({
+		options: {
+			shadowUrl: 'leaf-shadow.png',
+			iconSize:     [38, 95],
+			shadowSize:   [50, 64],
+			iconAnchor:   [22, 94],
+			shadowAnchor: [4, 62],
+			popupAnchor:  [-3, -76]
+		}
+	});
+
+	var polygon = L.polygon([[51.5,-0.2],[51.5+(100/10000),-0.2],[51.5+(100/10000),-0.2+(100/10000)],[51.5,-0.2+(100/10000)]]).addTo(map);
+
+	var greenIcon = new LeafIcon({iconUrl: 'leaf-green.png'}),
+		redIcon = new LeafIcon({iconUrl: 'leaf-red.png'}),
+		orangeIcon = new LeafIcon({iconUrl: 'leaf-orange.png'});
+
+//	L.marker([51.5, -0.09]).bindPopup("I am a green leaf.").addTo(map);
+//	L.marker([51.495, -0.083]).bindPopup("I am a red leaf.").addTo(map);
+//	L.marker([51.49, -0.1]).bindPopup("I am an orange leaf.").addTo(map);
+
+
+
+</script>
+
+<script>
+
+var markers = L.layerGroup().addTo(map);
+
+    function addMarker(coordx,coordy){
+
+    var array = [];
+
+    for (var i = 0; i < 1; i++) {
+
+
+        marker = new L.marker([51.5+(coordx/10000), -0.2+(coordy/10000)]).bindPopup("I am a LALA leaf.");
+
+        marker.addTo(markers);
+    }
+
+    //markers.addLayers(array);
+
+//    var group = L.featureGroup(markers).addTo(map);
+ //  map.fitBounds(markers.getBounds());
+    }
+
+    function deleteMarkers(){
+    markers.clearLayers();
+    }
+
+    var HttpClient = function() {
+    this.get = function(aUrl, aCallback) {
+        var anHttpRequest = new XMLHttpRequest();
+        anHttpRequest.onreadystatechange = function() {
+            if (anHttpRequest.readyState == 4 && anHttpRequest.status == 200)
+                aCallback(anHttpRequest.responseText);
+        }
+
+        anHttpRequest.open( "GET", aUrl, true );
+        anHttpRequest.send( null );
+    }
+}
+
+function start(){
+
+    window.setInterval(function(){
+  /// call your function here
+
+
+
+  var client = new HttpClient();
+client.get('http://localhost:80/dronet-ms-core/v1/mapStatus', function(response) {
+    var json = JSON.parse(response);
+    drones = json["drones"];
+    var arrayLength = drones.length;
+    deleteMarkers();
+    for (var i = 0; i < arrayLength; i++) {
+        console.log(drones[i]);
+        addMarker(drones[i].yCoord,drones[i].xCoord);
+    }
+
+});
+
+
+
+
+}, 500);
+
+}
+</script>
+
+
+
+</body>
+</html>
