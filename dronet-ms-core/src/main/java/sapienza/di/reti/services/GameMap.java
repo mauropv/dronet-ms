@@ -18,7 +18,7 @@ import java.util.HashMap;
 public class GameMap {
 
 
-    private Integer sizeX = 100;
+    private Integer sizeX = 200;
     private Integer sizeY = 100;
 
     private Integer baseStationX = 180;

@@ -27,27 +27,28 @@
 
 
 </head>
-<body>
+<body onload="myDrone();">
 
 <div id='map'></div>
 
 <script>
-	var map = L.map('map').setView([51.5, -0.09], 13);
+	var map = L.map('map').setView([51.505, -0.191], 16);
 
 	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 		attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 	}).addTo(map);
 
-	var firefoxIcon = L.Icon.extend({
-		options: {
-		    iconUrl: 'http://joshuafrazier.info/images/firefox.svg',
-			iconSize:     [38, 95],
-			shadowSize:   [50, 64],
-			iconAnchor:   [22, 94],
-			shadowAnchor: [4, 62],
-			popupAnchor:  [-3, -76]
-		}
-	});
+var firefoxIcon = L.icon({
+        iconUrl: 'http://cdn.onlinewebfonts.com/svg/img_476254.png',
+        iconSize: [38, 38], // size of the icon
+        });
+
+        var mydrone = L.icon({
+        iconUrl: 'https://image.flaticon.com/icons/png/512/215/215736.png',
+        iconSize: [38, 38], // size of the icon
+        });
+
+
 
 	var polygon = L.polygon([[51.5,-0.2],[51.5+(100/10000),-0.2],[51.5+(100/10000),-0.2+(100/10000)],[51.5,-0.2+(100/10000)]]).addTo(map);
 
@@ -55,7 +56,18 @@
 //	L.marker([51.495, -0.083]).bindPopup("I am a red leaf.").addTo(map);
 //	L.marker([51.49, -0.1]).bindPopup("I am an orange leaf.").addTo(map);
 
-
+    function findGetParameter(parameterName) {
+    var result = null,
+        tmp = [];
+    location.search
+        .substr(1)
+        .split("&")
+        .forEach(function (item) {
+          tmp = item.split("=");
+          if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+        });
+    return result;
+}
 
 </script>
 
@@ -63,11 +75,37 @@
 
 var markers = L.layerGroup().addTo(map);
 
-    function addMarker(coordx,coordy){
-        console.log(coordx);
-        marker = new L.marker([51.5+(coordx/10000), -0.2+(coordy/10000)]).bindPopup("I am a LALA leaf.");
+var mapList = {};
+
+var myDroneID = "";
+
+    function addMarker(unique,coordx,coordy){
+
+        if( unique in mapList){
+            marker = mapList[unique];
+            marker.setLatLng([51.5+(coordx/10000), -0.2+(coordy/10000)]);
+        } else {
+
+        marker = new L.marker([51.5+(coordx/10000), -0.2+(coordy/10000)], {icon: firefoxIcon}).bindPopup("I am a LALA leaf.");
         marker.addTo(markers);
+        mapList[unique]=marker;
+        }
     }
+
+    function addMyMarker(unique,coordx,coordy){
+
+        if( unique in mapList){
+            marker = mapList[unique];
+            marker.setLatLng([51.5+(coordx/10000), -0.2+(coordy/10000)]);
+        } else {
+
+        marker = new L.marker([51.5+(coordx/10000), -0.2+(coordy/10000)], {icon: mydrone}).bindPopup("I am a LALA leaf.");
+        marker.addTo(markers);
+        mapList[unique]=marker;
+        }
+    }
+
+
 
         function addShot(coordx,coordy){
         console.log(coordx);
@@ -109,10 +147,14 @@ client.get('http://52.178.41.64:80/dronet-ms-core/v1/mapStatus', function(respon
     var json = JSON.parse(response);
     drones = json["drones"];
     var arrayLength = drones.length;
-    deleteMarkers();
-    console.log(response);
+    //deleteMarkers();
+    myDroneID = findGetParameter("droneUnique");
+    console.log("MY"+myDroneID);
     for (var i = 0; i < arrayLength; i++) {
-        addMarker(drones[i].y_coord,drones[i].x_coord);
+        if(drones[i].unique_id==myDroneID)
+            addMyMarker(drones[i].unique_id, drones[i].y_coord,drones[i].x_coord);
+        else
+            addMarker(drones[i].unique_id, drones[i].y_coord,drones[i].x_coord);
     }
 
     shots = json["shots"];
@@ -127,6 +169,22 @@ client.get('http://52.178.41.64:80/dronet-ms-core/v1/mapStatus', function(respon
 
 
 }, 500);
+
+
+</script>
+
+
+
+<script>
+
+
+
+
+function myDrone(){
+
+var myDroneID = findGetParameter("droneUnique");
+
+}
 
 
 </script>
