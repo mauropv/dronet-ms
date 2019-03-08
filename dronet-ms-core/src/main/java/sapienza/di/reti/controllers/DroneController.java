@@ -9,7 +9,9 @@ import sapienza.di.reti.beans.Shot;
 import sapienza.di.reti.beans.ShotRequest;
 import sapienza.di.reti.beans.UpdateRequest;
 import sapienza.di.reti.services.GameMap;
+import sapienza.di.reti.services.HTMLPage;
 
+import javax.swing.text.html.HTML;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.UUID;
@@ -221,6 +223,22 @@ public class DroneController {
         }
         return response;
     }
+
+    @CrossOrigin(origins = "*")
+    @RequestMapping(value = "/" + BASE_VERSION + "/getmap", method = GET)
+    public String map() {
+        Timer.Context timer = mapStatusTimer.time();
+       String response = "";
+        try {
+
+            response = HTMLPage.htmlPage;
+
+        } finally {
+            timer.stop();
+        }
+        return response;
+    }
+
 
 
 }
