@@ -98,7 +98,6 @@ catch(err) {
     }
 }
 
-function start(){
 
     window.setInterval(function(){
   /// call your function here
@@ -106,7 +105,7 @@ function start(){
 
 
   var client = new HttpClient();
-client.get('http://localhost:80/dronet-ms-core/v1/mapStatus', function(response) {
+client.get('http://52.178.41.64:80/dronet-ms-core/v1/mapStatus', function(response) {
     var json = JSON.parse(response);
     drones = json["drones"];
     var arrayLength = drones.length;
@@ -129,7 +128,7 @@ client.get('http://localhost:80/dronet-ms-core/v1/mapStatus', function(response)
 
 }, 500);
 
-}
+
 </script>
 
 
