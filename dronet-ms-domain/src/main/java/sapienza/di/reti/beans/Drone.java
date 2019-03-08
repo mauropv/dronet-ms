@@ -110,4 +110,7 @@ public class Drone implements MovableObject{
         this.direction = direction;
     }
 
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
+    }
 }

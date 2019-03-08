@@ -86,6 +86,7 @@ public class GameMap {
         }
         updateShots();
         checkDiedDrones();
+        checkCollidingDrones();
         //giveRewards();
 
         epoch+=1;
@@ -102,6 +103,16 @@ public class GameMap {
         }
     }
 
+    private void checkCollidingDrones() {
+
+        for(Drone droneX:drones.values()){
+            for(Drone droneY:drones.values()){
+                if((!droneX.getUniqueId().equals(droneY.getUniqueId()))&&droneX.getxCoord()==droneY.getxCoord()&&droneX.getyCoord()==droneY.getyCoord()){
+                    droneX.setStatus("Crashed"); droneY.setStatus("Crashed");
+                }
+            }
+        }
+    }
 
     private void updateShots(){
         for(Shot shot : shots){

@@ -89,15 +89,13 @@ public class DroneController {
 
     }
 
-    /***
-     *  GET /mapStatus()
-     ritorna JSON contenente:
-     - droni presenti su mappa
-     - POI
-     -GameMap Details: {Xsize, Ysize, BaseStationX, BaseStationY}
-     -shots
-     * @return
+    /**
+     *
+     *
+     * @param
+     * @return SOMETHING
      */
+
 
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/" + BASE_VERSION + "/mapStatus", method = GET)
@@ -128,8 +126,13 @@ public class DroneController {
         return mapStat;
     }
 
- //   PUT /CreateDrone (String Name)
- //   return a idUnivoco and a secretKey
+    /**
+     *
+     * @param userAgent text1
+     * @param droneName text2
+     * @return ret1
+     * @throws Exception ex1
+     */
 
     @RequestMapping(value =  "/" + BASE_VERSION + "/createDrone", method = PUT, consumes = "text/plain")
     public HashMap<String, String> createDrone(@RequestHeader(value="user-agent") String userAgent, @RequestBody String droneName) throws Exception {
@@ -145,6 +148,10 @@ public class DroneController {
             Drone newDrone = new Drone(droneName, new Random().nextInt(gameMap.getSizeX()),new Random().nextInt(gameMap.getSizeY()));
             String secret = UUID.randomUUID().toString();
 
+            if(newDrone.getName().contains("DTEST")){
+                newDrone.setUniqueId(newDrone.getName());
+                secret = newDrone.getName();
+            }
             //Salviamo il drone
             gameMap.addDrone(newDrone,secret);
 
