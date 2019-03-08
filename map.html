@@ -71,12 +71,18 @@ var markers = L.layerGroup().addTo(map);
 
         function addShot(coordx,coordy){
         console.log(coordx);
-        marker = new L.marker([51.5+(coordx/10000), -0.2+(coordy/10000)], {icon: firefoxIcon}).bindPopup("I am a LALA leaf.");
+        marker = new L.marker([51.5+(coordx/10000), -0.2+(coordy/10000)]).bindPopup("I am a LALA leaf.");
         marker.addTo(markers);
     }
 
     function deleteMarkers(){
-    markers.clearLayers();
+    try {
+      markers.clearLayers();
+
+}
+catch(err) {
+  console.log(err.message);
+}
     }
 
     var HttpClient = function() {

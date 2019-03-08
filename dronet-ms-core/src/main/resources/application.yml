@@ -10,7 +10,6 @@ info:
 
 server:
   port: 80
-  address: 127.0.0.1
   compression:
     enabled: true
 
