@@ -12,7 +12,8 @@
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==" crossorigin=""></script>
-
+    <script src="https://fastcdn.org/Leaflet.awesome-markers/2.0.1/leaflet.awesome-markers.min.js"></script>
+    <link href="https://fastcdn.org/Leaflet.awesome-markers/2.0.1/leaflet.awesome-markers.css" rel="stylesheet">
 
     <style>
 		html, body {
@@ -48,6 +49,12 @@ var firefoxIcon = L.icon({
         iconSize: [38, 38], // size of the icon
         });
 
+        var redMarker = L.AwesomeMarkers.icon({
+    icon: 'hashtag',
+    prefix: 'fa',
+    markerColor: 'red'
+});
+
 
 
 	var polygon = L.polygon([[51.5,-0.2],[51.5+(100/10000),-0.2],[51.5+(100/10000),-0.2+(200/10000)],[51.5,-0.2+(200/10000)]]).addTo(map);
@@ -74,6 +81,11 @@ var firefoxIcon = L.icon({
 <script>
 
 var markers = L.layerGroup().addTo(map);
+
+var shotsMap = L.layerGroup().addTo(map);
+
+var POIsMap = L.layerGroup().addTo(map);
+
 
 var mapList = {};
 
@@ -108,19 +120,26 @@ var myDroneID = "";
 
 
         function addShot(coordx,coordy){
-        console.log(coordx);
-        marker = new L.marker([51.5+(coordx/10000), -0.2+(coordy/10000)]).bindPopup("I am a LALA leaf.");
-        marker.addTo(markers);
+
+        marker = new L.marker([51.5+(coordx/10000), -0.2+(coordy/10000)], {icon: L.AwesomeMarkers.icon({icon: 'truck', prefix: 'fa', markerColor: 'cadetblue'}) }).bindPopup("I am a LALA leaf.");
+        marker.addTo(shotsMap);
     }
 
-    function deleteMarkers(){
-    try {
-      markers.clearLayers();
 
-}
-catch(err) {
-  console.log(err.message);
-}
+  function addPOI(coordx,coordy){
+
+        marker = new L.marker([51.5+(coordx/10000), -0.2+(coordy/10000)]).bindPopup("I am a LALA leaf.");
+        marker.addTo(shotsMap);
+    }
+
+
+    function deleteShots(){
+    try {
+      shotsMap.clearLayers();
+    }
+    catch(err) {
+        console.log(err.message);
+    }
     }
 
     var HttpClient = function() {
@@ -143,11 +162,11 @@ catch(err) {
 
 
   var client = new HttpClient();
-client.get('http://52.178.41.64:80/dronet-ms-core/v1/mapStatus', function(response) {
+client.get('http://35.228.1.72:80/dronet-ms-core/v1/mapStatus', function(response) {
     var json = JSON.parse(response);
     drones = json["drones"];
     var arrayLength = drones.length;
-    //deleteMarkers();
+    deleteShots();
     myDroneID = findGetParameter("droneUnique");
     console.log("MY"+myDroneID);
     for (var i = 0; i < arrayLength; i++) {
@@ -162,6 +181,14 @@ client.get('http://52.178.41.64:80/dronet-ms-core/v1/mapStatus', function(respon
     for (var i = 0; i < arrayLength; i++) {
         addShot(shots[i].y_coord,shots[i].x_coord);
     }
+
+        POIs = json["POI"];
+    var arrayLength = POIs.length;
+    for (var i = 0; i < arrayLength; i++) {
+        addPOI(POIs[i].y,POIs[i].x);
+    }
+
+
 
 });
 

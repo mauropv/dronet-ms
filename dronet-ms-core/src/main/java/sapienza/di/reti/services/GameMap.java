@@ -10,6 +10,7 @@ import sapienza.di.reti.beans.Shot;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 /**
  * Created by mauropiva on 06/03/19.
@@ -87,15 +88,30 @@ public class GameMap {
         updateShots();
         checkDiedDrones();
         checkCollidingDrones();
-        //giveRewards();
+        giveRewards();
 
         epoch+=1;
+    }
+
+    private void giveRewards() {
+
+        for(Drone drone: drones.values()){
+            for(POI poi : POIList){
+                if(drone.getxCoord()==poi.getX()&&drone.getyCoord()==poi.getY()){
+                    drone.increaseScore(1);
+                    poi.setX(new Random().nextInt(sizeX));
+                    poi.setY(new Random().nextInt(sizeY));
+                }
+            }
+        }
+
     }
 
     private void checkDiedDrones() {
 
         for(Shot shot:shots){
             for(Drone drone:drones.values()){
+                System.out.println(drone.getName());
                 if(shot.getxCoord()==drone.getxCoord()&&shot.getyCoord()==drone.getyCoord()){
                     drone.setStatus("Died");
                 }
