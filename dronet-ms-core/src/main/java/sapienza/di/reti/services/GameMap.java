@@ -123,7 +123,7 @@ public class GameMap {
 
         for(Drone droneX:drones.values()){
             for(Drone droneY:drones.values()){
-                if((!droneX.getUniqueId().equals(droneY.getUniqueId()))&&droneX.getxCoord()==droneY.getxCoord()&&droneX.getyCoord()==droneY.getyCoord()){
+                if((droneX.getStatus().equals("Alive"))&& (droneY.getStatus().equals("Alive")) &&(!droneX.getUniqueId().equals(droneY.getUniqueId()))&&droneX.getxCoord()==droneY.getxCoord()&&droneX.getyCoord()==droneY.getyCoord()){
                     droneX.setStatus("Crashed"); droneY.setStatus("Crashed");
                 }
             }

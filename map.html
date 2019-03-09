@@ -170,10 +170,13 @@ client.get('http://35.228.1.72:80/dronet-ms-core/v1/mapStatus', function(respons
     myDroneID = findGetParameter("droneUnique");
     console.log("MY"+myDroneID);
     for (var i = 0; i < arrayLength; i++) {
-        if(drones[i].unique_id==myDroneID)
-            addMyMarker(drones[i].unique_id, drones[i].y_coord,drones[i].x_coord);
-        else
-            addMarker(drones[i].unique_id, drones[i].y_coord,drones[i].x_coord);
+
+        if(drones[i].status=="Alive"){
+            if(drones[i].unique_id==myDroneID)
+                addMyMarker(drones[i].unique_id, drones[i].y_coord,drones[i].x_coord);
+            else
+                addMarker(drones[i].unique_id, drones[i].y_coord,drones[i].x_coord);
+         }
     }
 
     shots = json["shots"];
