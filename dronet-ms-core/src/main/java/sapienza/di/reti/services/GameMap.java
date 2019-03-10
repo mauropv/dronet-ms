@@ -147,7 +147,6 @@ public class GameMap {
 
         for(Shot shot:shots){
             for(Drone drone:drones.values()){
-                System.out.println(drone.getName());
                 if(shot.getxCoord()==drone.getxCoord()&&shot.getyCoord()==drone.getyCoord()){
                     drone.setStatus("Died");
                 }
@@ -161,6 +160,7 @@ public class GameMap {
             for(Drone droneY:drones.values()){
                 if((droneX.getStatus().equals("Alive"))&& (droneY.getStatus().equals("Alive")) &&(!droneX.getUniqueId().equals(droneY.getUniqueId()))&&droneX.getxCoord()==droneY.getxCoord()&&droneX.getyCoord()==droneY.getyCoord()){
                     droneX.setStatus("Crashed"); droneY.setStatus("Crashed");
+                    System.out.println("Crash! " + droneX + " " + droneY);
                 }
             }
         }
