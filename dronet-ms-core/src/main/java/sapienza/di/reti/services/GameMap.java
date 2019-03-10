@@ -10,6 +10,7 @@ import sapienza.di.reti.beans.Shot;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Random;
 
 /**
@@ -26,7 +27,7 @@ public class GameMap {
     private Integer baseStationY = 90;
 
     private HashMap<String,Drone> drones = new HashMap<>();
-    private ArrayList<Shot> shots = new ArrayList<>();
+    private HashSet<Shot> shots = new HashSet<>();
     private ArrayList<POI> POIList = new ArrayList<>();
 
     private HashMap<String, Integer> hallOfFame = new HashMap<>();
