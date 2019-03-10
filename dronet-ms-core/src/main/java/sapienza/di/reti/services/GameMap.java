@@ -102,13 +102,39 @@ public class GameMap {
     public void updateMap() {
 
         if(epoch%4==0) {
-            updateDronesPositions();
+            try{
+                updateDronesPositions();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
         }
-        updateShots();
-        checkDiedDrones();
-        checkCollidingDrones();
-        giveRewards();
-        removeDiedDrone();
+        try{
+            updateShots();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        try{
+            checkDiedDrones();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        try{
+            checkCollidingDrones();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        try{
+            giveRewards();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        try{
+            removeDiedDrone();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
         epoch+=1;
     }
 
