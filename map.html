@@ -155,6 +155,11 @@ var myDroneID = "";
     }
 }
 
+//window.setInterval(function(){
+//    mapList = {};
+//    markers.clearLayers();
+//}, 15000);
+
 
     window.setInterval(function(){
   /// call your function here
@@ -180,9 +185,9 @@ client.get('http://35.228.1.72:80/dronet-ms-core/v1/mapStatus', function(respons
 
          if(drones[i].status == "Removing"){
 
-                  marker = mapList[unique];
+                  marker = mapList[drones[i].unique_id];
                   markers.removeLayer(marker);
-                  delete mapList[unique];
+                  delete mapList[drones[i].unique_id];
          }
     }
 

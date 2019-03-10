@@ -113,7 +113,8 @@ public class GameMap {
     }
 
     private void removeDiedDrone() {
-        for(Drone dr : drones.values()){
+        for (String droneUnique:drones.keySet()) {
+            Drone dr = drones.get(droneUnique);
             if(dr.getStatus().equals("Removing")){
                 drones.remove(dr.getUniqueId());
                 if(!hallOfFame.containsKey(dr.getName())|| hallOfFame.get(dr.getName())<dr.getScore())
@@ -132,7 +133,8 @@ public class GameMap {
 
     private void giveRewards() {
 
-        for(Drone drone: drones.values()){
+        for (String droneUnique:drones.keySet()) {
+            Drone drone = drones.get(droneUnique);
             for(POI poi : POIList){
                 if(drone.getxCoord()==poi.getX()&&drone.getyCoord()==poi.getY()){
                     drone.increaseScore(1);
@@ -147,7 +149,8 @@ public class GameMap {
     private void checkDiedDrones() {
 
         for(Shot shot:shots){
-            for(Drone drone:drones.values()){
+            for (String droneUnique:drones.keySet()) {
+                Drone drone = drones.get(droneUnique);
                 if(shot.getxCoord()==drone.getxCoord()&&shot.getyCoord()==drone.getyCoord()){
                     drone.setStatus("Died");
                 }
@@ -157,8 +160,10 @@ public class GameMap {
 
     private void checkCollidingDrones() {
 
-        for(Drone droneX:drones.values()){
-            for(Drone droneY:drones.values()){
+        for (String droneUnique:drones.keySet()) {
+            Drone droneX = drones.get(droneUnique);
+            for (String droneUnique2:drones.keySet()) {
+                Drone droneY = drones.get(droneUnique2);
                 if((droneX.getStatus().equals("Alive"))&& (droneY.getStatus().equals("Alive")) &&(!droneX.getUniqueId().equals(droneY.getUniqueId()))&&droneX.getxCoord()==droneY.getxCoord()&&droneX.getyCoord()==droneY.getyCoord()){
                     droneX.setStatus("Crashed"); droneY.setStatus("Crashed");
                     System.out.println("Crash! " + droneX + " " + droneY);
