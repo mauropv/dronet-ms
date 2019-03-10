@@ -29,6 +29,8 @@ public class GameMap {
     private ArrayList<Shot> shots = new ArrayList<>();
     private ArrayList<POI> POIList = new ArrayList<>();
 
+    private HashMap<String, Integer> hallOfFame = new HashMap<>();
+
     private Long epoch = 0L;
 
 
@@ -58,7 +60,7 @@ public class GameMap {
         return shots;
     }
 
-    public Object getPOI() {
+    public ArrayList<POI> getPOI() {
         return POIList;
     }
 
@@ -71,6 +73,22 @@ public class GameMap {
     public void buildPOI() {
         System.out.println("Building POIs");
         POIList.add(new POI(10,10,"V4","TCP","localhost",80));
+    }
+
+    @PostConstruct
+    public void buildAutodrones() {
+        System.out.println("Building POIs");
+        for (int i = 0; i <3; i++){
+            createAutodrone(1,i);
+            createAutodrone(2,i);
+            createAutodrone(3,i);
+        }
+    }
+
+    private void createAutodrone(Integer version, Integer i) {
+
+        Drone drone = new Drone("AUTODRONEv-"+version+"-"+i, new Random().nextInt(sizeX),new Random().nextInt(sizeY));
+        drones.put(drone.getUniqueId(),drone);
     }
 
     public void addDrone(Drone newDrone, String secret) {
@@ -89,8 +107,26 @@ public class GameMap {
         checkDiedDrones();
         checkCollidingDrones();
         giveRewards();
-
+        removeDiedDrone();
         epoch+=1;
+    }
+
+    private void removeDiedDrone() {
+        for(Drone dr : drones.values()){
+            if(dr.getStatus().equals("Removing")){
+                drones.remove(dr.getUniqueId());
+                if(!hallOfFame.containsKey(dr.getName())|| hallOfFame.get(dr.getName())<dr.getScore())
+                    hallOfFame.put(dr.getName(),dr.getScore());
+
+                if(dr.getName().contains("AUTODRONEv")){
+                    createAutodrone(Integer.parseInt(dr.getName().split("-")[1]),
+                            Integer.parseInt(dr.getName().split("-")[2]));
+                }
+
+            }
+            else if(!dr.getStatus().equals("Alive")) dr.setStatus("Removing");
+        }
+
     }
 
     private void giveRewards() {

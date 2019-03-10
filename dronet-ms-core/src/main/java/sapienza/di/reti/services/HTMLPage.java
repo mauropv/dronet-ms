@@ -19,7 +19,8 @@ public class HTMLPage {
             "\n" +
             "    <link rel=\"stylesheet\" href=\"https://unpkg.com/leaflet@1.4.0/dist/leaflet.css\" integrity=\"sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==\" crossorigin=\"\"/>\n" +
             "    <script src=\"https://unpkg.com/leaflet@1.4.0/dist/leaflet.js\" integrity=\"sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==\" crossorigin=\"\"></script>\n" +
-            "\n" +
+            "    <script src=\"https://fastcdn.org/Leaflet.awesome-markers/2.0.1/leaflet.awesome-markers.min.js\"></script>\n" +
+            "    <link href=\"https://fastcdn.org/Leaflet.awesome-markers/2.0.1/leaflet.awesome-markers.css\" rel=\"stylesheet\">\n" +
             "\n" +
             "    <style>\n" +
             "\t\thtml, body {\n" +
@@ -55,6 +56,12 @@ public class HTMLPage {
             "        iconSize: [38, 38], // size of the icon\n" +
             "        });\n" +
             "\n" +
+            "        var redMarker = L.AwesomeMarkers.icon({\n" +
+            "    icon: 'hashtag',\n" +
+            "    prefix: 'fa',\n" +
+            "    markerColor: 'red'\n" +
+            "});\n" +
+            "\n" +
             "\n" +
             "\n" +
             "\tvar polygon = L.polygon([[51.5,-0.2],[51.5+(100/10000),-0.2],[51.5+(100/10000),-0.2+(200/10000)],[51.5,-0.2+(200/10000)]]).addTo(map);\n" +
@@ -82,31 +89,36 @@ public class HTMLPage {
             "\n" +
             "var markers = L.layerGroup().addTo(map);\n" +
             "\n" +
+            "var shotsMap = L.layerGroup().addTo(map);\n" +
+            "\n" +
+            "var POIsMap = L.layerGroup().addTo(map);\n" +
+            "\n" +
+            "\n" +
             "var mapList = {};\n" +
             "\n" +
             "var myDroneID = \"\";\n" +
             "\n" +
-            "    function addMarker(unique,coordx,coordy){\n" +
+            "    function addMarker(unique,coordx,coordy,name){\n" +
             "\n" +
             "        if( unique in mapList){\n" +
             "            marker = mapList[unique];\n" +
             "            marker.setLatLng([51.5+(coordx/10000), -0.2+(coordy/10000)]);\n" +
             "        } else {\n" +
             "\n" +
-            "        marker = new L.marker([51.5+(coordx/10000), -0.2+(coordy/10000)], {icon: firefoxIcon}).bindPopup(\"I am a LALA leaf.\");\n" +
+            "        marker = new L.marker([51.5+(coordx/10000), -0.2+(coordy/10000)], {icon: firefoxIcon}).bindPopup(name);\n" +
             "        marker.addTo(markers);\n" +
             "        mapList[unique]=marker;\n" +
             "        }\n" +
             "    }\n" +
             "\n" +
-            "    function addMyMarker(unique,coordx,coordy){\n" +
+            "    function addMyMarker(unique,coordx,coordy,name){\n" +
             "\n" +
             "        if( unique in mapList){\n" +
             "            marker = mapList[unique];\n" +
             "            marker.setLatLng([51.5+(coordx/10000), -0.2+(coordy/10000)]);\n" +
             "        } else {\n" +
             "\n" +
-            "        marker = new L.marker([51.5+(coordx/10000), -0.2+(coordy/10000)], {icon: mydrone}).bindPopup(\"I am a LALA leaf.\");\n" +
+            "        marker = new L.marker([51.5+(coordx/10000), -0.2+(coordy/10000)], {icon: mydrone}).bindPopup(name);\n" +
             "        marker.addTo(markers);\n" +
             "        mapList[unique]=marker;\n" +
             "        }\n" +
@@ -115,19 +127,26 @@ public class HTMLPage {
             "\n" +
             "\n" +
             "        function addShot(coordx,coordy){\n" +
-            "        console.log(coordx);\n" +
-            "        marker = new L.marker([51.5+(coordx/10000), -0.2+(coordy/10000)]).bindPopup(\"I am a LALA leaf.\");\n" +
-            "        marker.addTo(markers);\n" +
+            "\n" +
+            "        marker = new L.marker([51.5+(coordx/10000), -0.2+(coordy/10000)], {icon: L.AwesomeMarkers.icon({icon: 'truck', prefix: 'fa', markerColor: 'cadetblue'}) }).bindPopup(\"I am a LALA leaf.\");\n" +
+            "        marker.addTo(shotsMap);\n" +
             "    }\n" +
             "\n" +
-            "    function deleteMarkers(){\n" +
-            "    try {\n" +
-            "      markers.clearLayers();\n" +
             "\n" +
-            "}\n" +
-            "catch(err) {\n" +
-            "  console.log(err.message);\n" +
-            "}\n" +
+            "  function addPOI(coordx,coordy){\n" +
+            "\n" +
+            "        marker = new L.marker([51.5+(coordx/10000), -0.2+(coordy/10000)]).bindPopup(\"I am a LALA leaf.\");\n" +
+            "        marker.addTo(shotsMap);\n" +
+            "    }\n" +
+            "\n" +
+            "\n" +
+            "    function deleteShots(){\n" +
+            "    try {\n" +
+            "      shotsMap.clearLayers();\n" +
+            "    }\n" +
+            "    catch(err) {\n" +
+            "        console.log(err.message);\n" +
+            "    }\n" +
             "    }\n" +
             "\n" +
             "    var HttpClient = function() {\n" +
@@ -150,18 +169,28 @@ public class HTMLPage {
             "\n" +
             "\n" +
             "  var client = new HttpClient();\n" +
-            "client.get('http://52.178.41.64:80/dronet-ms-core/v1/mapStatus', function(response) {\n" +
+            "client.get('http://35.228.1.72:80/dronet-ms-core/v1/mapStatus', function(response) {\n" +
             "    var json = JSON.parse(response);\n" +
             "    drones = json[\"drones\"];\n" +
             "    var arrayLength = drones.length;\n" +
-            "    //deleteMarkers();\n" +
+            "    deleteShots();\n" +
             "    myDroneID = findGetParameter(\"droneUnique\");\n" +
             "    console.log(\"MY\"+myDroneID);\n" +
             "    for (var i = 0; i < arrayLength; i++) {\n" +
-            "        if(drones[i].unique_id==myDroneID)\n" +
-            "            addMyMarker(drones[i].unique_id, drones[i].y_coord,drones[i].x_coord);\n" +
-            "        else\n" +
-            "            addMarker(drones[i].unique_id, drones[i].y_coord,drones[i].x_coord);\n" +
+            "\n" +
+            "        if(drones[i].status==\"Alive\"){\n" +
+            "            if(drones[i].unique_id==myDroneID)\n" +
+            "                addMyMarker(drones[i].unique_id, drones[i].y_coord,drones[i].x_coord,drones[i].name);\n" +
+            "            else\n" +
+            "                addMarker(drones[i].unique_id, drones[i].y_coord,drones[i].x_coord,drones[i].name);\n" +
+            "         }\n" +
+            "\n" +
+            "         if(drones[i].status == \"Removing\"){\n" +
+            "\n" +
+            "                  marker = mapList[unique];\n" +
+            "                  markers.removeLayer(marker);\n" +
+            "                  delete mapList[unique];\n" +
+            "         }\n" +
             "    }\n" +
             "\n" +
             "    shots = json[\"shots\"];\n" +
@@ -169,6 +198,14 @@ public class HTMLPage {
             "    for (var i = 0; i < arrayLength; i++) {\n" +
             "        addShot(shots[i].y_coord,shots[i].x_coord);\n" +
             "    }\n" +
+            "\n" +
+            "        POIs = json[\"POI\"];\n" +
+            "    var arrayLength = POIs.length;\n" +
+            "    for (var i = 0; i < arrayLength; i++) {\n" +
+            "        addPOI(POIs[i].y,POIs[i].x);\n" +
+            "    }\n" +
+            "\n" +
+            "\n" +
             "\n" +
             "});\n" +
             "\n" +

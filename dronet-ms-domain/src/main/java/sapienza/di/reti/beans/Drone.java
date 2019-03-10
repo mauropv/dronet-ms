@@ -26,7 +26,7 @@ public class Drone implements MovableObject{
         for(int i = 0; i < 100; i++)System.out.print("-");
     }
 
-    private static String[] allowedDirections ={"N","NE","E","SE","S","SO","O","NO"};
+    public static String[] allowedDirections ={"N","NE","E","SE","S","SO","O","NO"};
     private static String[] allowedStatus ={"Alive","Crashed","Killed","Out"};
 
     private String name;

@@ -91,27 +91,27 @@ var mapList = {};
 
 var myDroneID = "";
 
-    function addMarker(unique,coordx,coordy){
+    function addMarker(unique,coordx,coordy,name){
 
         if( unique in mapList){
             marker = mapList[unique];
             marker.setLatLng([51.5+(coordx/10000), -0.2+(coordy/10000)]);
         } else {
 
-        marker = new L.marker([51.5+(coordx/10000), -0.2+(coordy/10000)], {icon: firefoxIcon}).bindPopup("I am a LALA leaf.");
+        marker = new L.marker([51.5+(coordx/10000), -0.2+(coordy/10000)], {icon: firefoxIcon}).bindPopup(name);
         marker.addTo(markers);
         mapList[unique]=marker;
         }
     }
 
-    function addMyMarker(unique,coordx,coordy){
+    function addMyMarker(unique,coordx,coordy,name){
 
         if( unique in mapList){
             marker = mapList[unique];
             marker.setLatLng([51.5+(coordx/10000), -0.2+(coordy/10000)]);
         } else {
 
-        marker = new L.marker([51.5+(coordx/10000), -0.2+(coordy/10000)], {icon: mydrone}).bindPopup("I am a LALA leaf.");
+        marker = new L.marker([51.5+(coordx/10000), -0.2+(coordy/10000)], {icon: mydrone}).bindPopup(name);
         marker.addTo(markers);
         mapList[unique]=marker;
         }
@@ -173,9 +173,16 @@ client.get('http://35.228.1.72:80/dronet-ms-core/v1/mapStatus', function(respons
 
         if(drones[i].status=="Alive"){
             if(drones[i].unique_id==myDroneID)
-                addMyMarker(drones[i].unique_id, drones[i].y_coord,drones[i].x_coord);
+                addMyMarker(drones[i].unique_id, drones[i].y_coord,drones[i].x_coord,drones[i].name);
             else
-                addMarker(drones[i].unique_id, drones[i].y_coord,drones[i].x_coord);
+                addMarker(drones[i].unique_id, drones[i].y_coord,drones[i].x_coord,drones[i].name);
+         }
+
+         if(drones[i].status == "Removing"){
+
+                  marker = mapList[unique];
+                  markers.removeLayer(marker);
+                  delete mapList[unique];
          }
     }
 
