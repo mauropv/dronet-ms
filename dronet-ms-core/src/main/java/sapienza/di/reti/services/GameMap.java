@@ -112,7 +112,7 @@ public class GameMap {
         try{
             updateShots();
         }catch(Exception e){
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         try{
             checkDiedDrones();
