@@ -61,11 +61,11 @@ public class AutoDrone1 {
                             Math.pow(poi1.getY()-(dr.getyCoord()+newDirs[1]),2));
 
                     if(distanceFromPoi>distanceFromPoiwithNewDir) {
-                        System.out.println(dr.getName()+ " " + dr.getDirection() + " " + newDir + " " +distanceFromPoi + " "+ distanceFromPoiwithNewDir+
-                        " " + Math.pow(poi1.getX()-dr.getxCoord(),2) + " " + Math.pow(poi1.getX()-(dr.getxCoord()+newDirs[0]),2) +
-                        " " + Math.pow(poi1.getY()-dr.getyCoord(),2) + " " + Math.pow(poi1.getY()-(dr.getyCoord()+newDirs[1]),2)
+                       // System.out.println(dr.getName()+ " " + dr.getDirection() + " " + newDir + " " +distanceFromPoi + " "+ distanceFromPoiwithNewDir+
+                      //  " " + Math.pow(poi1.getX()-dr.getxCoord(),2) + " " + Math.pow(poi1.getX()-(dr.getxCoord()+newDirs[0]),2) +
+                      //  " " + Math.pow(poi1.getY()-dr.getyCoord(),2) + " " + Math.pow(poi1.getY()-(dr.getyCoord()+newDirs[1]),2)
 
-                        );
+                      //  );
                         dr.setDirection(newDir);
 
                     }

@@ -27,7 +27,7 @@ public class GameMap {
     private Integer baseStationY = 90;
 
     private HashMap<String,Drone> drones = new HashMap<>();
-    private HashSet<Shot> shots = new HashSet<>();
+    private ArrayList<Shot> shots = new ArrayList<>();
     private ArrayList<POI> POIList = new ArrayList<>();
 
     private HashMap<String, Integer> hallOfFame = new HashMap<>();
@@ -80,8 +80,8 @@ public class GameMap {
     public void buildAutodrones() {
         System.out.println("Building POIs");
         for (int i = 0; i <3; i++){
-            createAutodrone(1,i);
-            createAutodrone(2,i);
+           // createAutodrone(1,i);
+           // createAutodrone(2,i);
             createAutodrone(3,i);
         }
     }
@@ -101,7 +101,7 @@ public class GameMap {
     @Scheduled(fixedRate = 500)
     public void updateMap() {
 
-        if(epoch%4==0) {
+        if(epoch%2==0) {
             try{
                 updateDronesPositions();
             }catch(Exception e){
@@ -112,7 +112,7 @@ public class GameMap {
         try{
             updateShots();
         }catch(Exception e){
-            //e.printStackTrace();
+            e.printStackTrace();
         }
         try{
             checkDiedDrones();
@@ -139,35 +139,52 @@ public class GameMap {
     }
 
     private void removeDiedDrone() {
-        for (String droneUnique:drones.keySet()) {
-            Drone dr = drones.get(droneUnique);
-            if(dr.getStatus().equals("Removing")){
-                drones.remove(dr.getUniqueId());
-                if(!hallOfFame.containsKey(dr.getName())|| hallOfFame.get(dr.getName())<dr.getScore())
-                    hallOfFame.put(dr.getName(),dr.getScore());
 
-                if(dr.getName().contains("AUTODRONEv")){
-                    createAutodrone(Integer.parseInt(dr.getName().split("-")[1]),
-                            Integer.parseInt(dr.getName().split("-")[2]));
-                }
+        Integer len = drones.size();
 
+        for(int i = 0; i < len; i++) {
+
+            try {
+                String droneUnique = (String) drones.keySet().toArray()[i];
+                Drone dr = drones.get(droneUnique);
+                if (dr.getStatus().equals("Removing")) {
+                    drones.remove(dr.getUniqueId());
+                    if (!hallOfFame.containsKey(dr.getName()) || hallOfFame.get(dr.getName()) < dr.getScore())
+                        hallOfFame.put(dr.getName(), dr.getScore());
+
+                    if (dr.getName().contains("AUTODRONEv")) {
+                        createAutodrone(Integer.parseInt(dr.getName().split("-")[1]),
+                                Integer.parseInt(dr.getName().split("-")[2]));
+                    }
+
+                } else if (!dr.getStatus().equals("Alive")) dr.setStatus("Removing");
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            else if(!dr.getStatus().equals("Alive")) dr.setStatus("Removing");
         }
 
     }
 
     private void giveRewards() {
 
-        for (String droneUnique:drones.keySet()) {
-            Drone drone = drones.get(droneUnique);
-            for(POI poi : POIList){
-                if(drone.getxCoord()==poi.getX()&&drone.getyCoord()==poi.getY()){
-                    drone.increaseScore(1);
-                    poi.setX(new Random().nextInt(sizeX));
-                    poi.setY(new Random().nextInt(sizeY));
+        Integer len = drones.size();
+
+        for(int i = 0; i < len; i++) {
+                String droneUnique = (String) drones.keySet().toArray()[i];
+                Drone drone = drones.get(droneUnique);
+                if(drone.getName().contains("DTEST")){
+                    System.out.println(drone.getxCoord()+ " " + drone.getyCoord() +" " +  POIList.get(0).getX() + " " + POIList.get(0).getY());
                 }
-            }
+                if (drone.getStatus().equals("Alive")) {
+                    for (POI poi : POIList) {
+                        if (drone.getxCoord() == poi.getX() && drone.getyCoord() == poi.getY()) {
+                            drone.increaseScore(1);
+                            poi.setX(new Random().nextInt(sizeX));
+                            poi.setY(new Random().nextInt(sizeY));
+                        }
+                    }
+                }
+
         }
 
     }
@@ -175,7 +192,11 @@ public class GameMap {
     private void checkDiedDrones() {
 
         for(Shot shot:shots){
-            for (String droneUnique:drones.keySet()) {
+
+            Integer len = drones.size();
+
+            for(int i = 0; i < len; i++) {
+                String droneUnique = (String) drones.keySet().toArray()[i];
                 Drone drone = drones.get(droneUnique);
                 if(shot.getxCoord()==drone.getxCoord()&&shot.getyCoord()==drone.getyCoord()){
                     drone.setStatus("Died");
@@ -199,8 +220,13 @@ public class GameMap {
     }
 
     private void updateShots(){
-        for(Shot shot : shots){
-            updateShotPosition(shot);
+        Integer lenght = shots.size();
+        for(int i = 0; i <lenght; i++){
+            try{
+                updateShotPosition(shots.get(i));
+            } catch(Exception e){
+               // e.printStackTrace();
+            }
         }
     }
 

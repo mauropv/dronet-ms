@@ -167,7 +167,7 @@ var myDroneID = "";
 
 
   var client = new HttpClient();
-client.get('http://35.228.1.72:80/dronet-ms-core/v1/mapStatus', function(response) {
+client.get('http://localhost:80/dronet-ms-core/v1/mapStatus', function(response) {
     var json = JSON.parse(response);
     drones = json["drones"];
     var arrayLength = drones.length;
