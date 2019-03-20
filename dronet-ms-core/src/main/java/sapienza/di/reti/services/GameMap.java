@@ -169,9 +169,9 @@ public class GameMap {
 
         Integer len = drones.size();
 
-        String[] dronesArray = (String[])drones.keySet().toArray();
+        Object[] dronesArray = drones.keySet().toArray();
         for(int i = 0; i < len; i++) {
-                String droneUnique = dronesArray[i] ;
+                String droneUnique = (String)dronesArray[i] ;
                 try {
                     Drone drone = drones.get(droneUnique);
                     if (drone.getName().contains("DTEST")) {
