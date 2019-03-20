@@ -169,20 +169,25 @@ public class GameMap {
 
         Integer len = drones.size();
 
+        String[] dronesArray = (String[])drones.keySet().toArray();
         for(int i = 0; i < len; i++) {
-                String droneUnique = (String) drones.keySet().toArray()[i];
-                Drone drone = drones.get(droneUnique);
-                if(drone.getName().contains("DTEST")){
-                    System.out.println(drone.getxCoord()+ " " + drone.getyCoord() +" " +  POIList.get(0).getX() + " " + POIList.get(0).getY());
-                }
-                if (drone.getStatus().equals("Alive")) {
-                    for (POI poi : POIList) {
-                        if (drone.getxCoord() == poi.getX() && drone.getyCoord() == poi.getY()) {
-                            drone.increaseScore(1);
-                            poi.setX(new Random().nextInt(sizeX));
-                            poi.setY(new Random().nextInt(sizeY));
+                String droneUnique = dronesArray[i] ;
+                try {
+                    Drone drone = drones.get(droneUnique);
+                    if (drone.getName().contains("DTEST")) {
+                        System.out.println(drone.getxCoord() + " " + drone.getyCoord() + " " + POIList.get(0).getX() + " " + POIList.get(0).getY());
+                    }
+                    if (drone.getStatus().equals("Alive")) {
+                        for (POI poi : POIList) {
+                            if (drone.getxCoord() == poi.getX() && drone.getyCoord() == poi.getY()) {
+                                drone.increaseScore(1);
+                                poi.setX(new Random().nextInt(sizeX));
+                                poi.setY(new Random().nextInt(sizeY));
+                            }
                         }
                     }
+                } catch (Exception e){
+                    e.printStackTrace();
                 }
 
         }
