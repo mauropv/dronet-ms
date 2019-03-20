@@ -178,7 +178,7 @@ public class DroneController {
             if (!userAgent.equals("drone-client"))
                 throw new Exception("Solo i droni giusti possono accedere alla chat :(");
 
-            System.out.println("UpldateRequest: " +updateRequest.getIdunivoco() + updateRequest.getSecretkey());
+            //System.out.println("UpldateRequest: " +updateRequest.getIdunivoco() + updateRequest.getSecretkey());
             //Check drone existance
             if (!gameMap.getDroneSecret(updateRequest.getIdunivoco()).equals(updateRequest.getSecretkey()))
                 throw new Exception("Questo nome del drone non e' consentito");
