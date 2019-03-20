@@ -179,6 +179,7 @@ public class GameMap {
                         System.out.println(drone.getStatus().equals("Alive"));
                         System.out.println(POIList.size());
                     }
+                    /*
                     if (drone.getStatus().equals("Alive")) {
                         for (POI poi : POIList) {
                             if (drone.getxCoord() == poi.getX() && drone.getyCoord() == poi.getY()) {
@@ -187,8 +188,8 @@ public class GameMap {
                                 poi.setY(new Random().nextInt(sizeY));
                             }
                         }
-                    }
-                    else if(drone.getStatus().equals("Alive") && drone.getxCoord() ==POIList.get(0).getX() && drone.getyCoord() == POIList.get(0).getY()){
+                    }*/
+                    if(drone.getStatus().equals("Alive") && drone.getxCoord() ==POIList.get(0).getX() && drone.getyCoord() == POIList.get(0).getY()){
                         System.out.println("Second CONTROL");
                         drone.increaseScore(1);
                         POIList.get(0).setX(new Random().nextInt(sizeX));
