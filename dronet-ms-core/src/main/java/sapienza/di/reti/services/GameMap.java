@@ -207,13 +207,20 @@ public class GameMap {
 
     private void checkCollidingDrones() {
 
-        for (String droneUnique:drones.keySet()) {
-            Drone droneX = drones.get(droneUnique);
-            for (String droneUnique2:drones.keySet()) {
-                Drone droneY = drones.get(droneUnique2);
+        Integer len = drones.size();
+
+        for(int i = 0; i < len; i++) {
+
+            for(int j = 0; j < len; j++) {
+                try{
+                Drone droneX = drones.get((String) drones.keySet().toArray()[i]);
+                Drone droneY = drones.get((String) drones.keySet().toArray()[j]);
                 if((droneX.getStatus().equals("Alive"))&& (droneY.getStatus().equals("Alive")) &&(!droneX.getUniqueId().equals(droneY.getUniqueId()))&&droneX.getxCoord()==droneY.getxCoord()&&droneX.getyCoord()==droneY.getyCoord()){
-                    droneX.setStatus("Crashed"); droneY.setStatus("Crashed");
-                    System.out.println("Crash! " + droneX + " " + droneY);
+                        droneX.setStatus("Crashed"); droneY.setStatus("Crashed");
+                        System.out.println("Crash! " + droneX + " " + droneY);
+                    }
+                } catch(Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
