@@ -177,6 +177,10 @@ public class GameMap {
                     if (drone.getName().contains("DTEST")) {
                         System.out.println(drone.getxCoord() + " " + drone.getyCoord() + " " + POIList.get(0).getX() + " " + POIList.get(0).getY());
                         System.out.println(drone.getStatus().equals("Alive"));
+                        System.out.println(drone.getStatus().equals("Alive") && drone.getxCoord() ==POIList.get(0).getX() && drone.getyCoord() == POIList.get(0).getY());
+                        System.out.println(drone.getxCoord() ==POIList.get(0).getX() && drone.getyCoord() == POIList.get(0).getY());
+                        System.out.println(drone.getxCoord() ==POIList.get(0).getX() );
+                        System.out.println(drone.getyCoord() == POIList.get(0).getY());
                         System.out.println(POIList.size());
                     }
                     /*
