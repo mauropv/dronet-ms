@@ -217,7 +217,7 @@ public class GameMap {
             for(int i = 0; i < len; i++) {
                 String droneUnique = (String) drones.keySet().toArray()[i];
                 Drone drone = drones.get(droneUnique);
-                if(shot.getxCoord()==drone.getxCoord()&&shot.getyCoord()==drone.getyCoord()){
+                if(shot.getxCoord().equals(drone.getxCoord())&&shot.getyCoord().equals(drone.getyCoord())){
                     drone.setStatus("Died");
                 }
             }
