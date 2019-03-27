@@ -30,6 +30,14 @@ public class GameMap {
     private ArrayList<Shot> shots = new ArrayList<>();
     private ArrayList<POI> POIList = new ArrayList<>();
 
+    public HashMap<String, Integer> getHallOfFame() {
+        return hallOfFame;
+    }
+
+    public void setHallOfFame(HashMap<String, Integer> hallOfFame) {
+        this.hallOfFame = hallOfFame;
+    }
+
     private HashMap<String, Integer> hallOfFame = new HashMap<>();
 
     private Long epoch = 0L;

@@ -112,6 +112,7 @@ public class DroneController {
             details.put("BaseStationX",gameMap.getBaseStationX());
             details.put("BaseStationY",gameMap.getBaseStationY());
             mapStat.put("mapDetails",details);
+            mapStat.put("deadboard",gameMap.getHallOfFame());
 
             //Drones
             mapStat.put("drones",gameMap.getDrones().values());
